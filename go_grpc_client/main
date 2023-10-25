@@ -1,0 +1,33 @@
+package main
+
+import (
+	"context"
+	"log"
+
+	pb "github.com/fd/gc/proto" // Import your generated package
+	"google.golang.org/grpc"
+)
+
+func main() {
+	// Connect to the gRPC server
+	//conn, err := grpc.Dial("[::1]:8080", grpc.WithInsecure())
+	conn, err := grpc.Dial("localhost:8080", grpc.WithInsecure())
+
+	if err != nil {
+		log.Fatalf("Failed to connect: %v", err)
+	}
+	defer conn.Close()
+
+	// Create a gRPC client
+	client := pb.NewUserServiceClient(conn)
+
+	// Make a request to the GetUser RPC method
+	req := &pb.UserRequest{Id: "1"}
+	resp, err := client.GetUser(context.Background(), req)
+	if err != nil {
+		log.Fatalf("Error calling GetUser: %v", err)
+	}
+
+	// Handle the response
+	log.Printf("User ID: %s, Name: %s, Location: %s, Title: %s", resp.Id, resp.Name, resp.Location, resp.Title)
+}

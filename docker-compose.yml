@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  go-grpc-server:
+    build:
+      context: ./go_grpc_server
+    ports:
+      - "8080:8080"
+    networks:
+      - grpc_network
+
+  go-grpc-client:
+    build:
+      context: ./go_grpc_client
+    depends_on:
+      - go-grpc-server
+    networks:
+      - grpc_network
+
+  py-grpc-client:
+    build:
+      context: ./py_grpc_client
+    depends_on:
+      - go-grpc-server
+    networks:
+      - grpc_network
+
+  nodejs-grpc-client:
+    build:
+      context: ./nodejs_grpc_client
+    depends_on:
+      - go-grpc-server
+    networks:
+      - grpc_network
+    
+networks:
+  grpc_network:
+
