@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-grpc-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodejs-grpc-client
+  template:
+    metadata:
+      labels:
+        app: nodejs-grpc-client
+    spec:
+      containers:
+      - name: nodejs-grpc-client
+        image: nodejs-grpc-client:latest  # Replace with your actual image name
+        env:
+        - name: SERVER_ADDRESS
+          valueFrom:
+            configMapKeyRef:
+              name: grpc-config
+              key: SERVER_ADDRESS
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodejs-grpc-client
+spec:
+  selector:
+    app: nodejs-grpc-client
+  ports:
+    - port: 81  # Assuming the client exposes some HTTP interface
+      targetPort: 81  # Adjust this if your client uses a different port
+  type: LoadBalancer

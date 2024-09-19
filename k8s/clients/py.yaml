@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: py-grpc-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: py-grpc-client
+  template:
+    metadata:
+      labels:
+        app: py-grpc-client
+    spec:
+      containers:
+      - name: py-grpc-client
+        image: py-grpc-client:latest  # Replace with your actual image name
+        env:
+        - name: SERVER_ADDRESS
+          valueFrom:
+            configMapKeyRef:
+              name: grpc-config
+              key: SERVER_ADDRESS
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: py-grpc-client
+spec:
+  selector:
+    app: py-grpc-client
+  ports:
+    - port: 80  # Assuming the client exposes some HTTP interface
+      targetPort: 80  # Adjust this if your client uses a different port
+  type: LoadBalancer

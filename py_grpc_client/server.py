@@ -1,4 +1,5 @@
 import sys
+import os
 import grpc
 sys.path.insert(0, './proto/')
 import user_pb2
@@ -9,7 +10,8 @@ import user_pb2_grpc
 
 # Define the gRPC server address
 # server_address = 'localhost:8080'
-server_address = 'go-grpc-server:8080'
+# server_address = 'go-grpc-server:8080'
+server_address = os.getenv('SERVER_ADDRESS', 'go-grpc-server:8080')
 
 
 # Create a gRPC channel to connect to the server

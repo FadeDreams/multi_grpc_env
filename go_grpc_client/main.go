@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"os"
 
 	pb "github.com/fadedreams/multi_grpc_env/proto" // Import your generated package
 	"google.golang.org/grpc"
@@ -11,7 +12,11 @@ import (
 func main() {
 	// Connect to the gRPC server
 	//conn, err := grpc.Dial("localhost:8080", grpc.WithInsecure())
-	conn, err := grpc.Dial("go-grpc-server:8080", grpc.WithInsecure())
+	serverAddress := os.Getenv("SERVER_ADDRESS")
+	if serverAddress == "" {
+		serverAddress = "go-grpc-server:8080" // Fallback
+	}
+	conn, err := grpc.Dial(serverAddress, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Failed to connect: %v", err)
 	}
